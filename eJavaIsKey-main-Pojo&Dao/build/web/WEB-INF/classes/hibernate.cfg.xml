@@ -45,7 +45,6 @@ Contributor(s):
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
     <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/lib?zeroDateTimeBehavior=convertToNull</property>
     <property name="hibernate.connection.username">admin</property>
-    <property name="hibernate.connection.password">Farharbatah0987</property>
     <mapping resource="pojo/Lib.hbm.xml"/>
     <mapping resource="pojo/Librarians.hbm.xml"/>
   </session-factory>
