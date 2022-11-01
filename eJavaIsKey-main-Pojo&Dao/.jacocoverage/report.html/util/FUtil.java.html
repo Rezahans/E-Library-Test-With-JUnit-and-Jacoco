@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>FUtil.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;RFLib-Elibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">util</a> &gt; <span class="el_source">FUtil.java</span></div><h1>FUtil.java</h1><pre class="source lang-java linenums">/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package util;
+
+import java.util.ArrayList;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import org.hibernate.*;
+import org.hibernate.cfg.AnnotationConfiguration;
+
+/**
+ * Hibernate Utility class with a convenient method to get Session Factory
+ * object.
+ *
+ * @author Farhan
+ */
+<span class="fc" id="L21">public class FUtil {</span>
+
+    private static final SessionFactory sessionFactory;
+    
+    static {
+        try {
+            // Create the SessionFactory from standard (hibernate.cfg.xml) 
+            // config file.
+<span class="fc" id="L29">            sessionFactory = new AnnotationConfiguration().configure().buildSessionFactory();</span>
+<span class="nc" id="L30">        } catch (Throwable ex) {</span>
+            // Log the exception. 
+<span class="nc" id="L32">            System.err.println(&quot;Initial SessionFactory creation failed.&quot; + ex);</span>
+<span class="nc" id="L33">            throw new ExceptionInInitializerError(ex);</span>
+<span class="fc" id="L34">        }</span>
+<span class="fc" id="L35">    }</span>
+    
+    public static SessionFactory getSessionFactory() {
+<span class="fc" id="L38">        return sessionFactory;</span>
+    }
+    
+    	public static HttpSession getSession() {
+<span class="nc" id="L42">		return (HttpSession) FacesContext.getCurrentInstance()</span>
+<span class="nc" id="L43">				.getExternalContext().getSession(false);</span>
+	}
+
+	public static HttpServletRequest getRequest() {
+<span class="nc" id="L47">		return (HttpServletRequest) FacesContext.getCurrentInstance()</span>
+<span class="nc" id="L48">				.getExternalContext().getRequest();</span>
+	}
+
+	public static String getUserName() {
+<span class="nc" id="L52">		HttpSession session = (HttpSession) FacesContext.getCurrentInstance()</span>
+<span class="nc" id="L53">				.getExternalContext().getSession(false);</span>
+<span class="nc" id="L54">		return session.getAttribute(&quot;sesName&quot;).toString();</span>
+	}
+
+	public static String getUserId() {
+<span class="nc" id="L58">		HttpSession session = getSession();</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">		if (session != null)</span>
+<span class="nc" id="L60">			return (String) session.getAttribute(&quot;userid&quot;);</span>
+		else
+<span class="nc" id="L62">			return null;</span>
+	}
+        
+     public String validateAddB(String imglink, String judul, String penulis, String booklink, String genre){
+<span class="fc" id="L66">     ArrayList&lt;String&gt; errList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L67">     String alert = &quot;&quot;;</span>
+            
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            if(!judul.matches(&quot;[^&lt;&gt;{}]+&quot;)){</span>
+<span class="fc" id="L70">            errList.add(&quot; Invalid Book Title &quot;);</span>
+            }
+<span class="fc bfc" id="L72" title="All 2 branches covered.">            if (!penulis.matches(&quot;[^&lt;&gt;{}]+&quot;)){</span>
+<span class="fc" id="L73">            errList.add(&quot; Invalid Writer Name &quot;);</span>
+            }
+<span class="fc bfc" id="L75" title="All 2 branches covered.">            if (!genre.matches(&quot;[^&lt;&gt;{}]+&quot;)){</span>
+<span class="fc" id="L76">            errList.add(&quot; Invalid Genre &quot;);</span>
+            }
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            if (!imglink.matches(&quot;https:\\/\\/drive\\.google\\.com\\/file\\/d\\/(.*?)\\/view\\?usp\\=sharing&quot;)){</span>
+<span class="fc" id="L79">            errList.add(&quot; Invalid Image Link (Must Google Drive) &quot;);</span>
+            }
+<span class="fc bfc" id="L81" title="All 2 branches covered.">            if (!booklink.matches(&quot;https:\\/\\/drive\\.google\\.com\\/file\\/d\\/(.*?)\\/view\\?usp\\=sharing&quot;)){</span>
+<span class="fc" id="L82">            errList.add(&quot; Invalid Book Link (Must Google Drive) &quot;);</span>
+            }
+            
+<span class="fc bfc" id="L85" title="All 2 branches covered.">           if (!errList.isEmpty()) {</span>
+<span class="fc bfc" id="L86" title="All 2 branches covered.">                for (String msg : errList) {</span>
+<span class="fc" id="L87">                alert += (&quot;|| &quot; +msg );</span>
+<span class="fc" id="L88">            }</span>
+           }  
+<span class="fc" id="L90">           return alert;</span>
+    }
+     
+     public String validateEditB(String imglink, String judul, String penulis, String booklink, String genre){
+<span class="fc" id="L94">     ArrayList&lt;String&gt; errList = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L95">     String alert = &quot;&quot;;</span>
+            
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            if(!judul.matches(&quot;[^&lt;&gt;{}]+&quot;)){</span>
+<span class="fc" id="L98">            errList.add(&quot; Invalid Book Title &quot;);</span>
+            }
+<span class="fc bfc" id="L100" title="All 2 branches covered.">            if (!penulis.matches(&quot;[^&lt;&gt;{}]+&quot;)){</span>
+<span class="fc" id="L101">            errList.add(&quot; Invalid Writer Name &quot;);</span>
+            }
+<span class="fc bfc" id="L103" title="All 2 branches covered.">            if (!genre.matches(&quot;[^&lt;&gt;{}]+&quot;)){</span>
+<span class="fc" id="L104">            errList.add(&quot; Invalid Genre &quot;);</span>
+            }
+<span class="fc bfc" id="L106" title="All 2 branches covered.">            if (!imglink.matches(&quot;https:\\/\\/drive\\.google\\.com\\/file\\/d\\/(.*?)\\/view\\?usp\\=sharing&quot;)){</span>
+<span class="fc" id="L107">            errList.add(&quot; Invalid Image Link (Must Google Drive) &quot;);</span>
+            }
+<span class="fc bfc" id="L109" title="All 2 branches covered.">            if (!booklink.matches(&quot;https:\\/\\/drive\\.google\\.com\\/file\\/d\\/(.*?)\\/view\\?usp\\=sharing&quot;)){</span>
+<span class="fc" id="L110">            errList.add(&quot; Invalid Book Link (Must Google Drive) &quot;);</span>
+            }
+            
+<span class="fc bfc" id="L113" title="All 2 branches covered.">           if (!errList.isEmpty()) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">                for (String msg : errList) {</span>
+<span class="fc" id="L115">                alert += (&quot;|| &quot; +msg );</span>
+<span class="fc" id="L116">            }</span>
+           }  
+<span class="fc" id="L118">           return alert;</span>
+    }
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>

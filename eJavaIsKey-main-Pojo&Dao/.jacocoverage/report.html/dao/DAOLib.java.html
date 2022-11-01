@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DAOLib.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JaCoCoverage analysis of project &quot;RFLib-Elibrary&quot; (powered by JaCoCo from EclEmma)</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">DAOLib.java</span></div><h1>DAOLib.java</h1><pre class="source lang-java linenums">package dao;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import pojo.Lib;
+import util.FUtil;
+
+/**
+ *
+ * @author Farhan
+ */
+<span class="fc" id="L15">public class DAOLib {</span>
+    // Untuk menampilkan data ke tabel
+    public List&lt;Lib&gt; rtvBook() {
+<span class="fc" id="L18">        List listLib = new ArrayList();</span>
+<span class="fc" id="L19">        Transaction transaction = null;</span>
+<span class="fc" id="L20">        Session session = FUtil.getSessionFactory().openSession();</span>
+        try {
+<span class="fc" id="L22">            transaction = session.beginTransaction();</span>
+<span class="fc" id="L23">            Query query = session.createQuery(&quot;from Lib&quot;);</span>
+<span class="fc" id="L24">            listLib = query.list();</span>
+<span class="fc" id="L25">            transaction.commit();      </span>
+<span class="nc" id="L26">        } catch (Exception e) {</span>
+<span class="nc" id="L27">            System.out.println(e);</span>
+        } finally{
+<span class="pc" id="L29">            session.close();</span>
+<span class="pc" id="L30">        }</span>
+<span class="fc" id="L31">        return listLib;</span>
+    }
+    
+     // untuk mencari/seach data, manipulasi data seperti delete, edit, dan search
+    public List&lt;Lib&gt; getbyID(String idLib) {
+<span class="fc" id="L36">        Lib lib = new Lib();</span>
+<span class="fc" id="L37">        List&lt;Lib&gt; listLib = new ArrayList();</span>
+<span class="fc" id="L38">        Transaction transaction = null;</span>
+<span class="fc" id="L39">        Session session = FUtil.getSessionFactory().openSession();</span>
+        
+        try {
+<span class="fc" id="L42">            transaction = session.beginTransaction();</span>
+<span class="fc" id="L43">            Query query = session.createQuery(&quot;from Lib where id = :id&quot;);</span>
+<span class="fc" id="L44">            query.setString(&quot;id&quot;, idLib);</span>
+<span class="fc" id="L45">            lib = (Lib) query.uniqueResult();</span>
+<span class="fc" id="L46">            listLib = query.list();</span>
+<span class="fc" id="L47">            transaction.commit();</span>
+<span class="nc" id="L48">        } catch (Exception e) {</span>
+<span class="nc" id="L49">            System.out.println(e);</span>
+        } finally{
+<span class="pc" id="L51">            session.close();</span>
+<span class="pc" id="L52">        }</span>
+<span class="fc" id="L53">        return listLib;</span>
+    }
+    
+    // untuk add data
+    public void addBook(Lib lib){
+<span class="fc" id="L58">        Transaction transaction = null;</span>
+<span class="fc" id="L59">        Session session = FUtil.getSessionFactory().openSession();</span>
+        try {
+<span class="fc" id="L61">            transaction = session.beginTransaction();</span>
+<span class="fc" id="L62">            session.save(lib);</span>
+<span class="fc" id="L63">            transaction.commit();</span>
+<span class="nc" id="L64">        } catch (Exception e) {</span>
+<span class="nc" id="L65">            System.out.println(e);</span>
+        } finally{
+<span class="pc" id="L67">            session.close();</span>
+<span class="pc" id="L68">        }</span>
+<span class="fc" id="L69">    }</span>
+    
+    // untuk delete berdcasarkan id
+    public void deleteBook(Integer idLib) {
+<span class="fc" id="L73">        Transaction transaction = null;</span>
+<span class="fc" id="L74">        Session session = FUtil.getSessionFactory().openSession();</span>
+        try {
+<span class="fc" id="L76">            transaction = session.beginTransaction();</span>
+<span class="fc" id="L77">            Lib usr = (Lib) session.load(Lib.class, new Integer(idLib));</span>
+<span class="fc" id="L78">            session.delete(usr);</span>
+<span class="fc" id="L79">            transaction.commit();</span>
+<span class="nc" id="L80">        } catch (Exception e) {</span>
+<span class="nc" id="L81">            System.out.println(e);</span>
+        } finally{
+<span class="pc" id="L83">            session.close();</span>
+<span class="pc" id="L84">        }</span>
+<span class="fc" id="L85">    }</span>
+    
+    // untuk edit
+    public void editBook(Lib lib) {
+<span class="fc" id="L89">        Transaction transaction = null;</span>
+<span class="fc" id="L90">        Session session = FUtil.getSessionFactory().openSession();</span>
+        try {
+<span class="fc" id="L92">            transaction = session.beginTransaction();</span>
+<span class="fc" id="L93">            session.update(lib);</span>
+<span class="fc" id="L94">            transaction.commit();</span>
+<span class="nc" id="L95">        } catch (Exception e) {</span>
+<span class="nc" id="L96">            System.out.println(e);</span>
+        } finally{
+<span class="pc" id="L98">            session.close();</span>
+<span class="pc" id="L99">        }</span>
+<span class="fc" id="L100">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.6.201602180812</span></div></body></html>
